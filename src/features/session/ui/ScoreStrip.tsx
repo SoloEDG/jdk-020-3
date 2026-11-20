@@ -5,6 +5,9 @@ export function ScoreStrip({ state }: { state: Shift }) {
       (f) =>
         (f.departureAt ?? state.time) > f.deadline && f.status !== "departed",
     ).length;
+  const grounded = state.vehicles.filter(
+    (v) => v.status === "failed" || v.status === "maintenance",
+  ).length;
   return (
     <div className="score-strip">
       <div>
@@ -44,6 +47,16 @@ export function ScoreStrip({ state }: { state: Shift }) {
           <strong>
             {String(state.conflicts).padStart(2, "0")}
             <small>EVENTS</small>
+          </strong>
+        </p>
+      </div>
+      <div>
+        <span className="stat-icon">⚙</span>
+        <p>
+          故障 / 在修
+          <strong>
+            {String(grounded).padStart(2, "0")}
+            <small>GSE</small>
           </strong>
         </p>
       </div>

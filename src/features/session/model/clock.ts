@@ -1,5 +1,6 @@
 import type { Shift } from "../../../shared/types";
 import { copyShift, record } from "../../../shared/document";
+
 export function advanceClock(state: Shift, seconds: number): Shift {
   if (state.paused) return state;
   const s = copyShift(state);
@@ -16,9 +17,11 @@ export function advanceClock(state: Shift, seconds: number): Shift {
   }
   return s;
 }
+
 export function togglePause(s: Shift): Shift {
   return { ...s, paused: !s.paused };
 }
+
 export function changeSpeed(s: Shift): Shift {
   return { ...s, speed: s.speed === 1 ? 2 : s.speed === 2 ? 4 : 1 };
 }

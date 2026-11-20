@@ -1,4 +1,5 @@
 import type { Shift } from "../../../shared/types";
+import { MAINTENANCE } from "../../../shared/config";
 import { occupiedFlight, compatibleStand } from "../lib/geometry";
 import { Aircraft } from "./Aircraft";
 interface Props {
@@ -219,22 +220,73 @@ export function ApronMap({ state, onStand, onFlight }: Props) {
           fill="#bfC5b5"
           stroke="#a7af9d"
         />
-        <text x="795" y="411" className="depot-label">
-          GSE STATION
+        <text x="793" y="406" className="depot-label">
+          GSE / MRO
         </text>
         {[0, 1, 2].map((n) => (
           <path
             key={n}
-            d={`M792 ${441 + n * 32}H897`}
+            d={`M788 ${496 + n * 26}H890`}
             stroke="#e8e4d2"
             strokeWidth="1"
           />
         ))}
+        {state.maintenance.bays.map((bay) => {
+          const job = state.maintenance.jobs.find((j) => j.bayId === bay.id);
+          const point =
+            MAINTENANCE.bays[
+              state.maintenance.bays.findIndex((b) => b.id === bay.id)
+            ];
+          return (
+            <g
+              key={bay.id}
+              className="bay-marker"
+              transform={`translate(${point.x} ${point.y})`}
+              data-testid={`bay-${bay.id}`}
+            >
+              <rect
+                x="-22"
+                y="-14"
+                width="44"
+                height="28"
+                rx="3"
+                fill={job ? "#e5d3b2" : "#d9ddcc"}
+                stroke={job ? "#c29a62" : "#a9b19f"}
+                strokeDasharray={job ? undefined : "3 3"}
+              />
+              <text y="3" textAnchor="middle" className="bay-label">
+                {bay.id}
+              </text>
+              {job && (
+                <circle
+                  r="4"
+                  cy="-19"
+                  fill={job.state === "active" ? "#c8884d" : "#8ba199"}
+                />
+              )}
+            </g>
+          );
+        })}
+        {state.lane.blockedBy && (
+          <g className="lane-block">
+            <rect
+              x="0"
+              y="323"
+              width="940"
+              height="64"
+              fill="#c26a4b"
+              fillOpacity=".14"
+            />
+            <text x="14" y="318" className="lane-warning">
+              APRON LANE BLOCKED · {state.lane.blockedBy} 故障车占道
+            </text>
+          </g>
+        )}
         {state.vehicles.map((v) => (
           <g
             key={v.id}
             transform={`translate(${v.position.x} ${v.position.y})`}
-            className="vehicle-marker"
+            className={`vehicle-marker ${v.failure ? "failed" : ""} ${v.status === "waiting" ? "waiting" : ""}`}
           >
             <rect
               x="-10"
@@ -247,9 +299,13 @@ export function ApronMap({ state, onStand, onFlight }: Props) {
                   ? "#dda24d"
                   : v.kind === "baggage"
                     ? "#4b9392"
-                    : "#798cab"
+                    : v.kind === "clean"
+                      ? "#798cab"
+                      : v.kind === "tow"
+                        ? "#c66a4c"
+                        : "#8b7cae"
               }
-              stroke="#f3f0df"
+              stroke={v.failure ? "#a23e2c" : "#f3f0df"}
               strokeWidth="1.5"
             />
             <rect x="6" y="-4" width="4" height="8" rx="1" fill="#e5e9df" />
@@ -263,6 +319,19 @@ export function ApronMap({ state, onStand, onFlight }: Props) {
                 strokeOpacity=".5"
                 className="moving-ring"
               />
+            )}
+            {v.failure && (
+              <g className="failure-badge">
+                <circle r="19" fill="none" stroke="#c26a4b" strokeWidth="2" strokeDasharray="4 3" />
+                <text y="-23" textAnchor="middle" className="failure-text">
+                  {v.failure.type === "drive" ? "行驶故障" : "设备故障"}
+                </text>
+              </g>
+            )}
+            {v.status === "waiting" && (
+              <text y="20" textAnchor="middle" className="waiting-text">
+                排队
+              </text>
             )}
           </g>
         ))}
@@ -294,6 +363,14 @@ export function ApronMap({ state, onStand, onFlight }: Props) {
         <span>
           <i className="legend-selected" />
           当前选择
+        </span>
+        <span>
+          <i className="legend-bay" />
+          维修工位
+        </span>
+        <span>
+          <i className="legend-failed" />
+          故障车
         </span>
         <span className="map-scale">0 ━━━━━ 100 m</span>
       </div>

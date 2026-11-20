@@ -39,6 +39,7 @@ export function initialFlights(): Flight[] {
       passengers: 172,
       status: "incoming",
       color: "#c75448",
+      urgent: true,
     },
     {
       id: "HU7602",
@@ -78,6 +79,7 @@ export function initialFlights(): Flight[] {
       passengers: 286,
       status: "scheduled",
       color: "#b85d58",
+      urgent: true,
     },
   ];
 }

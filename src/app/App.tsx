@@ -1,8 +1,13 @@
 import { useState } from "react";
 import { FlightBoard, assignStand, selectFlight } from "../features/flights";
 import { ApronMap, selectStand } from "../features/apron";
-import { FleetPanel, selectVehicle } from "../features/fleet";
+import { FleetPanel, selectVehicle, callTow, selfRecover } from "../features/fleet";
 import { dispatchService } from "../features/services";
+import {
+  MaintenancePanel,
+  expediteRepair,
+} from "../features/maintenance";
+import { requestPreventive } from "../features/fleet";
 import {
   SessionBar,
   ScoreStrip,
@@ -15,6 +20,7 @@ import {
 import { useSimulation } from "./useSimulation";
 import { Inspector } from "./Inspector";
 import "./styles.css";
+
 export function App() {
   const [state, setState] = useSimulation(),
     [notice, setNotice] = useState(""),
@@ -42,7 +48,7 @@ export function App() {
           if (saved) {
             setState(saved);
             notify("已恢复保存的班次");
-          } else notify("没有可用存档，当前班次保持不变");
+          } else notify("没有可用存档，或存档与当前状态不一致");
         }}
         onReset={() => setResetOpen(true)}
       />
@@ -74,6 +80,16 @@ export function App() {
             <FleetPanel
               state={state}
               onSelect={(id) => setState((s) => selectVehicle(s, id))}
+              onTow={(id) => setState((s) => callTow(s, id))}
+              onSelfRecover={(id) => setState((s) => selfRecover(s, id))}
+            />
+            <MaintenancePanel
+              state={state}
+              onPreventive={(id) => setState((s) => requestPreventive(s, id))}
+              onExpedite={(id) => setState((s) => expediteRepair(s, id))}
+              onSelectVehicle={(id) => setState((s) => selectVehicle(s, id))}
+              onTow={(id) => setState((s) => callTow(s, id))}
+              onSelfRecover={(id) => setState((s) => selfRecover(s, id))}
             />
           </div>
           <Inspector
@@ -86,11 +102,14 @@ export function App() {
             onDispatch={(kind, id) =>
               setState((s) => dispatchService(s, s.selectedFlightId, kind, id))
             }
+            onTow={(id) => setState((s) => callTow(s, id))}
           />
         </div>
         <footer>
           <span>APRON 07 · 地面有序，天空自由。</span>
-          <span>操作提示：选择航班 → 分配机位 → 派遣车辆 → 批准离港</span>
+          <span>
+            操作提示：分配机位 → 派遣车辆 → 关注磨损 → 拖救故障 → 批准离港
+          </span>
           <span>
             <i className="live-dot" />
             {state.paused ? "SIMULATION PAUSED" : "SIMULATION LIVE"}

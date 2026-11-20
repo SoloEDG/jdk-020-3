@@ -1,6 +1,7 @@
-import type { Shift } from "../../../shared/types";
+import type { Flight, Shift } from "../../../shared/types";
 import { copyShift, record } from "../../../shared/document";
 import { flightReady } from "../lib/readiness";
+
 export function assignStand(state: Shift, id: string, standId: string): Shift {
   const s = copyShift(state),
     f = s.flights.find((x) => x.id === id),
@@ -15,7 +16,7 @@ export function assignStand(state: Shift, id: string, standId: string): Shift {
     (f.size === "wide" && stand.size !== "wide")
   ) {
     s.conflicts++;
-    s.score -= 10;
+    s.score = Math.max(0, s.score - 10);
     record(s, "机位指令冲突：请检查尺寸、占用与航班状态", "warning");
     return s;
   }
@@ -25,12 +26,18 @@ export function assignStand(state: Shift, id: string, standId: string): Shift {
   record(s, `${id} 已停靠 ${standId}，可开始保障`, "success");
   return s;
 }
+
 export function departFlight(state: Shift, id: string): Shift {
   const s = copyShift(state),
     f = s.flights.find((x) => x.id === id);
   if (!f) return state;
+  // 换车之后仍以真实完成凭证为准，绝不因为车辆更替而误判完成。
   if (f.status !== "parked" || !flightReady(s, id)) {
-    record(s, "离港未获许可：请先完成全部地勤任务", "warning");
+    record(
+      s,
+      "离港未获许可：地勤任务尚未真正完成（换车/中断不计入完成）",
+      "warning",
+    );
     return s;
   }
   f.status = "departing";
@@ -41,6 +48,7 @@ export function departFlight(state: Shift, id: string): Shift {
   record(s, `${id} 获准推出 · +${points} 分`, "success");
   return s;
 }
+
 export function selectFlight(state: Shift, id: string): Shift {
   return {
     ...state,

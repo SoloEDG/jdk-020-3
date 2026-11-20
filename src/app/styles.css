@@ -623,6 +623,14 @@ h1 > span {
   background: #daa369;
   border-color: #daa369;
 }
+.map-legend .legend-bay {
+  background: #e5d3b2;
+  border-color: #c29a62;
+}
+.map-legend .legend-failed {
+  background: #f3ddd3;
+  border-color: #c26a4b;
+}
 .map-scale {
   margin-left: auto;
   font-family: monospace;
@@ -1199,5 +1207,432 @@ footer > span:last-child {
   *:after {
     animation-duration: 0.01ms !important;
     transition: none !important;
+  }
+}
+
+/* ── 磨损、故障与维修区 ───────────────────────────────────────── */
+.fleet-grid {
+  grid-template-columns: repeat(3, 1fr);
+}
+.fleet-card {
+  cursor: pointer;
+  flex-wrap: wrap;
+}
+.fleet-card.broken {
+  border-color: #d8a58e;
+  background: #fdf3ec;
+}
+.fleet-card .wear-mini {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font:
+    500 8px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 0.4px;
+  background: #eef0e4;
+  color: #7f8f79;
+}
+.fleet-card .wear-mini.guarded {
+  background: #f4ecd7;
+  color: #a8894c;
+}
+.fleet-card .wear-mini.high {
+  background: #f6e2cf;
+  color: #bb7a3c;
+}
+.fleet-card .wear-mini.critical {
+  background: #f6dcd4;
+  color: #b45c43;
+}
+.fleet-card em.waiting {
+  color: #bb874a;
+}
+.fleet-card em.failed {
+  color: #b45c43;
+}
+.fleet-actions {
+  width: 100%;
+  margin-top: 7px;
+}
+.fleet-actions .dispatch {
+  width: 100%;
+}
+
+.maintenance-panel {
+  margin-top: 22px;
+  border: 1px solid #dedfd2;
+  background: #fbfaf4;
+  border-radius: 8px;
+  padding: 16px 15px 13px;
+}
+.maintenance-panel .section-heading {
+  margin-bottom: 13px;
+}
+.maintenance-panel h2 {
+  font-size: 14px;
+}
+.maintenance-panel h2 small {
+  font-size: 9px;
+  font-weight: 400;
+  color: #94a18e;
+  margin-left: 10px;
+}
+.maintenance-body {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 14px;
+}
+.wear-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.wear-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 7px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+}
+.wear-row:hover,
+.wear-row.chosen {
+  border-color: #dcdccb;
+  background: #f6f5ea;
+}
+.wear-row.failed {
+  background: #fdf3ec;
+  border-color: #efd9cd;
+}
+.wear-name {
+  border: 0;
+  background: none;
+  text-align: left;
+  width: 64px;
+  flex-shrink: 0;
+  padding: 0;
+}
+.wear-name strong {
+  display: block;
+  font:
+    600 12px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 0.5px;
+  color: #334d4e;
+}
+.wear-name span {
+  font-size: 8px;
+  color: #8b9782;
+}
+.wear-bars {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px 9px;
+}
+.wear-track {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 8px;
+  color: #93a08a;
+}
+.wear-track > span {
+  width: 20px;
+  flex-shrink: 0;
+}
+.wear-track i {
+  flex: 1;
+  height: 4px;
+  background: #e6e8da;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.wear-track b {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+}
+.wear-track.travel b {
+  background: #6f9a92;
+}
+.wear-track.work b {
+  background: #c69258;
+}
+.wear-track em {
+  font-style: normal;
+  font-family: monospace;
+  width: 16px;
+  text-align: right;
+  color: #8c9882;
+}
+.risk-pill {
+  grid-column: 1 / -1;
+  font:
+    500 8px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 0.3px;
+  color: #7d8f7a;
+}
+.risk-pill.guarded {
+  color: #a8894c;
+}
+.risk-pill.high {
+  color: #c07c38;
+}
+.risk-pill.critical {
+  color: #b4503a;
+}
+.wear-actions {
+  flex-shrink: 0;
+}
+.wear-actions .badge {
+  font-size: 8px;
+}
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 8px;
+  letter-spacing: 0.4px;
+}
+.badge.warning {
+  background: #f5e2d2;
+  color: #b4783c;
+}
+.badge.info {
+  background: #e3ece4;
+  color: #6c8f7a;
+}
+
+.bay-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.bay-card {
+  border: 1px solid #dddfd0;
+  border-radius: 5px;
+  background: #f7f6ec;
+  padding: 8px 9px;
+}
+.bay-card.busy {
+  border-color: #d9c39f;
+  background: #fbf3e3;
+}
+.bay-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.bay-head strong {
+  font:
+    600 12px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 0.7px;
+}
+.bay-head span {
+  font-size: 8px;
+  color: #9aa48f;
+}
+.bay-card p {
+  font-size: 8px;
+  color: #8d9783;
+  margin: 4px 0 5px;
+  line-height: 1.6;
+}
+.bay-empty {
+  color: #a4ad9b !important;
+}
+.bay-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 5px;
+  font-size: 8px;
+  color: #9aa48f;
+}
+.bay-note {
+  display: flex;
+  gap: 8px;
+  font-size: 8px;
+  color: #9aa48f;
+  flex-wrap: wrap;
+}
+.bay-note em {
+  font-style: normal;
+}
+.bay-note em.ok {
+  color: #71957a;
+}
+.job-queue {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 11px;
+  padding-top: 10px;
+  border-top: 1px solid #e5e7d9;
+}
+.queue-label {
+  font:
+    600 8px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 1px;
+  color: #a3ab95;
+}
+.queue-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid #dcdccb;
+  background: #f2f3e8;
+  border-radius: 4px;
+  padding: 4px 7px;
+  font:
+    500 9px "Barlow Condensed",
+    sans-serif;
+  color: #5d715f;
+}
+.queue-item b {
+  color: #b1a077;
+  font-weight: 600;
+}
+.queue-item span {
+  color: #9aa48f;
+}
+.queue-item em {
+  font-style: normal;
+  color: #8c9882;
+}
+.queue-item.active {
+  border-color: #d9c39f;
+  background: #fbf3e3;
+}
+.queue-item:disabled {
+  cursor: default;
+}
+
+.vehicle-detail {
+  border-top: 1px solid #e0e4d6;
+  padding-top: 14px;
+  margin-top: 16px;
+}
+.vehicle-detail .subheading {
+  margin-bottom: 8px;
+}
+.vehicle-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px 13px;
+  font-size: 8px;
+  color: #8b9881;
+}
+.vehicle-facts b {
+  color: #4f6a5c;
+  font-weight: 500;
+}
+.vehicle-facts.muted {
+  margin-top: 6px;
+}
+.risk-text.guarded {
+  color: #a8894c;
+}
+.risk-text.high {
+  color: #c07c38;
+}
+.risk-text.critical {
+  color: #b4503a;
+}
+.failure-box {
+  margin-top: 9px;
+  border: 1px solid #efd7c9;
+  background: #fdf3ec;
+  border-radius: 5px;
+  padding: 9px;
+}
+.failure-box strong {
+  font-size: 10px;
+  color: #b2603f;
+}
+.failure-box p {
+  font-size: 8px;
+  color: #9c867a;
+  line-height: 1.7;
+  margin-top: 3px;
+}
+.failure-box .primary {
+  margin-top: 8px;
+}
+.failure-box .badge {
+  margin-top: 6px;
+}
+.urgent-tag {
+  font-size: 8px;
+  font-weight: 400;
+  background: #f5e0cf;
+  color: #b4773b;
+  border-radius: 3px;
+  padding: 2px 4px;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+.service-risk {
+  font-size: 8px;
+  color: #bb8646;
+  margin-top: 5px;
+}
+.dispatch.risk {
+  border-color: #e2c3a5;
+  background: #fbeee0;
+  color: #b47a3c;
+}
+.lane-warning {
+  fill: #b0563a;
+  font:
+    600 10px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 1.5px;
+}
+.bay-label {
+  fill: #596a5c;
+  font:
+    600 9px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 0.6px;
+}
+.bay-marker {
+  pointer-events: none;
+}
+.vehicle-marker.waiting {
+  opacity: 0.75;
+}
+.failure-text {
+  fill: #b4553a;
+  font:
+    600 9px "Barlow Condensed",
+    sans-serif;
+  letter-spacing: 0.5px;
+}
+.waiting-text {
+  fill: #b0854a;
+  font:
+    600 8px "Barlow Condensed",
+    sans-serif;
+}
+.vehicle-marker.failed {
+  animation: none;
+}
+@media (max-width: 1180px) {
+  .maintenance-body {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 760px) {
+  .wear-bars {
+    grid-template-columns: 1fr;
   }
 }
